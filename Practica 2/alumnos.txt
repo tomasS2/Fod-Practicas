@@ -1,0 +1,4 @@
+1 tomas
+10 7 ilid
+2 pedro
+12 2 ilid
