@@ -63,8 +63,8 @@ begin
 	assign(mae,nom);
 	rewrite(mae);
 	while not eof (txtAlu) do begin
-		read(txtAlu,rAl.codAlu, rAl.nom);
-		read(txtAlu,rAl.cantMatAproConFinal, rAl.cantMatAproSinFinal, rAl.ape);
+		readln(txtAlu,rAl.codAlu, rAl.nom);
+		readln(txtAlu,rAl.cantMatAproConFinal, rAl.cantMatAproSinFinal, rAl.ape);
 		write(mae,rAl);
 	end;
 	close (mae);
@@ -85,7 +85,7 @@ begin
 	assign(det,nom);
 	rewrite(det);
 	while not eof (txtDet) do begin
-		read(txtDet,rIa.codAlu,rIa.matAproSinFinal,rIa.matAproConFinal);
+		readln(txtDet,rIa.codAlu,rIa.matAproConFinal,rIa.matAproSinFinal);
 		write(det,rIa);
 	end;
 	close (det);
@@ -104,7 +104,7 @@ begin
 	while not eof (mae) do begin
 		read(mae,rAl);
 		writeln(txtInfoMae,rAl.codAlu, rAl.nom);
-		write(txtInfoMae,rAl.cantMatAproConFinal, rAl.cantMatAproSinFinal, rAl.ape);
+		writeln(txtInfoMae,rAl.cantMatAproConFinal, rAl.cantMatAproSinFinal, rAl.ape);
 	end;
 	close(mae);
 	close(txtInfoMae);
@@ -121,7 +121,7 @@ begin
 	reset(det);
 	while not eof (det) do begin
 		read(det,rIa);
-		write(txtInfoDet,rIa.codAlu,rIa.matAproSinFinal, rIa.matAproConFinal);
+		writeln(txtInfoDet,rIa.codAlu,rIa.matAproConFinal,rIa.matAproSinFinal);
 	end;
 	close(det);
 	close(txtInfoDet);
@@ -177,10 +177,12 @@ begin
 	rewrite(txtInfoEspecifica);
 	reset (mae);
 	while not eof (mae)do begin
-		read(mae,rAl);
-		if ((rAl.cantMatAproSinFinal-rAl.cantMatAproConFinal)>4)then begin
-			writeln(txtInfoEspecifica,rAl.codAlu, rAl.nom);
-			write(txtInfoEspecifica,rAl.cantMatAproConFinal, rAl.cantMatAproSinFinal, rAl.ape);
+		read(mae,rAl); 
+		if 	(rAl.cantMatAproSinFinal>4) then begin
+			if ((rAl.cantMatAproSinFinal-rAl.cantMatAproConFinal)>4)then begin
+				writeln(txtInfoEspecifica,rAl.codAlu, rAl.nom);
+				writeln(txtInfoEspecifica,rAl.cantMatAproConFinal, rAl.cantMatAproSinFinal, rAl.ape);
+			end;
 		end;
 	end;
 	close (mae);
