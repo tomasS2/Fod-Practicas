@@ -36,37 +36,31 @@ procedure cargarMaestro (var mae: archInfoCompacta; var det: archComisiones);
 var
 	rDet:rInformacionEmpleados;
 	rMae:rInformacionEmpleados;
-	//sumador:integer;//creo esta var porque dice que se debe generar un nuevo archivo (no hay datos guardados previamente en el archivo Maestro.)
+	sumador,auxCod:integer;
 begin
-	
+	assign (det,'infoDetalleEmpleados');
 	assign(mae,'archMaestro');
-	//rewrite(mae);
-	reset(mae);
+	rewrite(mae);
 	reset(det);
 	leerDetalle(det,rDet);
 	while (rDet.codEmple<>VALOR_ALTO)do begin
-		read(mae,rMae);
+		auxCod:=rDet.codEmple
 		sumador:=0;
-		while (rMae.codEmple <> rDet.codEmple)do 
-			read(mae,rMae);
-		while (rMae.codEmple = rDet.codEmple)do begin
-			rMae.montoComision:=rMae.montoComision+rDet.montoComision;
-			//sumador:=sumador+rDet.montoComision;
+		while (auxCod = rDet.codEmple)do begin
+			sumador:=sumador+rDet.montoComision;
 			leerDetalle(det,rDet);
 		end;
-		//rMae.montoComision:=sumador;
-		seek (mae, filepos(mae)-1);
+		rMae.codEmple:=auxCod;
+		rMae.montoComision:=sumador;
 		write(mae,rMae);
 	end;
 	close(mae);
 	close(det);
-	
 end;
 
 var
 	det:archComisiones;
 	mae:archInfoCompacta;
 begin	
-	assign (det,'infoDetalleEmpleados');
 	cargarMaestro(mae,det);
 end.
