@@ -6,6 +6,9 @@ La información del archivo se encuentra ordenada por código de empleado y cada
 Realice un procedimiento que reciba el archivo anteriormente descripto y lo compacte. 
 En consecuencia, deberá generar un nuevo archivo en el cual, cada empleado aparezca  una única vez con el valor total de sus comisiones.
 NOTA:  No se conoce a priori la cantidad de  empleados. Además,  el archivo debe  ser recorrido una única vez.
+
+no se si crear el maestro a partir de un detalle o modificar el maestro a partir del detalle.
+
 }
 program p2ej1fod;
 const 	
