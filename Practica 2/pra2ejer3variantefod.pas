@@ -57,6 +57,7 @@ procedure cargarArchivoMaestro (var mae:archProd; var aDet:aArchCarga);
 				indiMin:=i;
 			end
 		end;
+		min:=aPedi[indiMin];
 		leerDetalle(aDet[indiMin],aPedi[indiMin]);
 	end;
 	
