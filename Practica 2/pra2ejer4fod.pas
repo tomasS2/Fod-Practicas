@@ -13,26 +13,96 @@ máquinas.
 - El archivo maestro debe crearse en la siguiente ubicación física: /var/log.
 
 
-como dice "genere un archivo maestro" asumo que es un merge 
 }
-program p2ej3fod;
-
+program p2ej4fod;
+const
+	VALOR_ALTO=9999;
 
 type
+{
 	rFecha=record
 		dia:1..31;
 		mes:1..12;
 		ano:2000..2022;
 	end;
+}
 	rInfoDetalle=record
 		cod_usuario:integer;
-		fecha:rFecha;
+		fecha:string;
 		tiempo_sesion:integer;
 	end;
 	
-	rInfoMaestro=record
-		cod_usuario:integer;
-		fecha:rFecha;
-		tiempo_tot_sesiones:integer;
+	archMaestro=file of rInfoDetalle;//misma estructura q el detalle.
+	archDetalle=file of rInfoDetalle;
+	
+	
+	aDetalles=array[1..5]of archDetalle;
+	aInfoDetalles=array[1..5]of rInfoDetalle;
+	
+	
+	
+
+procedure generarArchMaestro(var mae:archMaestro; var aDet:aDetalles);
+	procedure leerDetalle(var det: archDetalle; var rInfoDet:rInfoDetalle);
+	begin
+		if not eof (det) then
+			read(det,rInfoDet)
+		else
+			rInfoDet.cod_usuario:=VALOR_ALTO;
 	end;
+
+	procedure minimo (var aDet: aDetalles; var min:rInfoDetalle ;var aInfoDet:aInfoDetalles );
+	var
+		i,minCod,indiMin:integer;
+	begin
+		minCod:=9999;
+		for i:=1 to 5 do begin
+			if (aInfoDet[i].cod_usuario<minCod)then begin
+				minCod:=aInfoDet[i].cod_usuario;
+				indiMin:=i;
+			end;
+		end;
+		min:=aInfoDet[indiMin];
+		leerDetalle(aDet[indiMin],aInfoDet[indiMin]);
+	end;
+	
+
+var
+	aInfoDet:aInfoDetalles;
+	min:rInfoDetalle;
+	regm:rInfoDetalle;//mae y det comparten reg de informacion.
+	i:integer;
+begin
+	assign(mae,'archivoMaestroEj4Pr2');
+	rewrite(mae);
+	
+	for i:=1 to 5 do begin
+		assign(aDet[i],'archivoMaestroEj4Pr2_'+Chr(i+48));	
+		reset(aDet[i]);
+		leerDetalle(aDet[i],aInfoDet[i]);
+	end;
+	minimo(aDet,min,aInfoDet);
+	while (min.cod_usuario<>VALOR_ALTO)do begin
+		regm.cod_usuario:=min.cod_usuario;
+		regm.tiempo_sesion:=0;
+		while (regm.cod_usuario=min.cod_usuario)do begin
+			regm.fecha:=min.fecha;
+			while(regm.cod_usuario=min.cod_usuario) and  (regm.fecha=min.fecha)do begin
+				regm.tiempo_sesion:=regm.tiempo_sesion+min.tiempo_sesion;
+				minimo(aDet,min,aInfoDet);
+			end;
+		end;
+		write(mae,regm);//en el campo fecha va a quedar la ultima que se ingresó.
+	end;
+	close(mae);
+	for i:=1 to 30 do 
+		close(aDet[i]);	
+end;
+
+var
+	mae:archMaestro;
+	aDet:aDetalles;
+begin
+	generarArchMaestro(mae,aDet);
+end.
 	
