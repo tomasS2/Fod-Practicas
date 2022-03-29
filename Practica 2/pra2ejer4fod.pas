@@ -95,7 +95,7 @@ begin
 		write(mae,regm);//en el campo fecha va a quedar la ultima que se ingresó.
 	end;
 	close(mae);
-	for i:=1 to 30 do 
+	for i:=1 to 5 do 
 		close(aDet[i]);	
 end;
 
