@@ -22,7 +22,7 @@ Tenga en cuenta que no necesariamente va a fallecer en el distrito donde nació 
 además puede no haber fallecido.
 }
 program ej5pr2fod;
-
+const
 	VALOR_ALTO=9999;
 type
 
@@ -62,8 +62,8 @@ type
 	end;
 	
 	rInfoArchivo=record//record del maestro.
-		nacimiento=rNacimiento;
-		fallecimiento=rFallecimiento;
+		nacimiento:rNacimiento;
+		fallecimiento:rFallecimiento;
 	end;
 	
 	arch_mae=file of rInfoArchivo;
@@ -90,9 +90,8 @@ type
 		else
 			r.nro_partida:=VALOR_ALTO;
 	end;
-	
-	
-	procedure minimoNac (var aNac:aNacimientos; var min: rNacimientos; var aDet:arr_arch_nacimiento);
+
+	procedure minimoNac (var aNac:aNacimientos; var min: rNacimiento; var aDet:arr_arch_nacimientos);
 	var
 		minCod,i,indiMin:integer;
 	begin
@@ -104,9 +103,11 @@ type
 			end
 		end;
 		min:=aNac[indiMin];
-		leerDetalle(aDet[indiMin],aNac[indiMin]);
+		leerDetalleNacimiento(aDet[indiMin],aNac[indiMin]);
 	end;
-	procedure minimoFallec (var aFallec:aFallecimientos; var min: rFallecimiento; var aDet:arr_arch_fallecimiento);
+
+
+	procedure minimoFallec (var aFallec:aFallecimientos; var min: rFallecimiento; var aDet:arr_arch_fallecimientos);
 	var
 		minCod,i,indiMin:integer;
 	begin
@@ -118,30 +119,49 @@ type
 			end
 		end;
 		min:=aFallec[indiMin];
-		leerDetalle(aDet[indiMin],aFallec[indiMin]);
+		leerDetalleFallecimiento(aDet[indiMin],aFallec[indiMin]);
 	end;
 
 var
+	i:integer;
+	rInfoTotal:rInfoArchivo;
 	minNac:rNacimiento;
 	minFac:rFallecimiento;
 	mae:arch_mae;
-	arrNacim:aNacimientos;
 	arrFallec:aFallecimientos;
-	archDetNac:arch_det_nacimiento;
-	archDetFal:arch_det_fallecimiento;
+	arrNacim:aNacimientos;
+	arrDetNac:arr_arch_nacimientos;
+	arrDetFal:arr_arch_fallecimientos;
+	
 begin 
 	assign(mae,'archMaeEj5pr2');
 	rewrite(mae);
 	for i:=1 to 50 do begin
-		assign(arrNacim[i],'archDetNacim'+Chr(i+48));
-		assign(arrFallec[i],'archDetFallec'+Chr(i+48));
-		reset(arrNacim[i]);
-		reset(arrFallec[i]);
-		leerDetalleNacimiento(arrNacim[i],aNac[i]);
-		leerDetalleFallecimiento(arrFallec[i],aFalle[i]);
+		assign(arrDetNac[i],'archDetNacim'+Chr(i+48));
+		assign(arrDetFal[i],'archDetFallec'+Chr(i+48));
+		reset(arrDetNac[i]);
+		reset(arrDetFal[i]);
+		leerDetalleNacimiento(arrDetNac[i],arrNacim[i]);
+		leerDetalleFallecimiento(arrDetFal[i],arrFallec[i]);
 	end;
-	minimoNac(arrNacim,minNac,archDetNac);
-	while (minNac.nro_partida)do begin
-		
-		
-end.	
+	minimoFallec(arrFallec,minFac,arrDetFal);
+	while (minFac.nro_partida <> VALOR_ALTO)do begin
+		minimoNac(arrNacim, minNac,arrDetNac);
+		while (minFac.nro_partida <> minNac.nro_partida)do begin	
+			rInfoTotal.nacimiento:=minNac;
+			write(mae, rInfoTotal);
+			minimoNac(arrNacim, minNac,arrDetNac);
+		end;
+		while (minFac.nro_partida = minNac.nro_partida) do begin
+			rInfoTotal.nacimiento:=minNac;
+			rInfoTotal.fallecimiento:=minFac;
+			write(mae, rInfoTotal);
+			minimoFallec(arrFallec,minFac,arrDetFal);
+		end;
+	end;
+	close (mae);
+	for i:=1 to 50 do begin	
+		close(arrDetNac[i]);
+		close(arrDetFal[i]);
+	end;
+end.
