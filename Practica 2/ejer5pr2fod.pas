@@ -21,7 +21,7 @@ Nota: Todos los archivos están ordenados por nro partida de nacimiento que es �
 Tenga en cuenta que no necesariamente va a fallecer en el distrito donde nació la persona y
 además puede no haber fallecido.
 }
-program ej5pr2fod;
+program p2ej5fod;
 const
 	VALOR_ALTO=9999;
 type
@@ -165,3 +165,5 @@ begin
 		close(arrDetFal[i]);
 	end;
 end.
+
+
