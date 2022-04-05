@@ -105,7 +105,7 @@ begin
 	minimo(aInfoDet,min,aDet);
 	while (min.cod_localidad <> VALOR_ALTO) do begin
 		read(mae, regm);
-		rCasos.cant_casos_activos:=0;
+		cant_casos_activos:=0;
 		
 		while (min.cod_localidad <> regm.rInfoMuni.cod_localidad) do begin
 			if (regm.rInfoMuni.rInCasos.cant_casos_activos>50)  then //suma en el contador, en el caso que no haya sido actualizada, la localidad que tenga mas de 50 casos activos.
@@ -115,21 +115,24 @@ begin
 				
 		while (min.cod_localidad = regm.rInfoMuni.cod_localidad)do begin
 			codCepa:= min.cod_cepa;
-			regm.rInfoMuni.rInCasos.cant_casos_activos:=0;
-			regm.rInfoMuni.rInCasos.cant_casos_nuevos:=0;
-			regm.rInfoMuni.rInCasos.cant_casos_fallecidos:=0;
-			regm.rInfoMuni.rInCasos.cant_casos_recuperados:=0;
+			
+			rCasos.cant_casos_fallecidos:=0;
+			rCasos.cant_casos_recuperados:=0;
 			while (min.cod_localidad = regm.rInfoMuni.cod_localidad)and(min.cod_cepa = codCepa)do begin
 			
-				regm.rInfoMuni.rInCasos.cant_casos_activos:=min.rInCasos.cant_casos_activos + regm.rInfoMuni.rInCasos.cant_casos_activos;
-				regm.rInfoMuni.rInCasos.cant_casos_nuevos:=min.rInCasos.cant_casos_nuevos + regm.rInfoMuni.rInCasos.cant_casos_nuevos;
-				regm.rInfoMuni.rInCasos.cant_casos_recuperados:=min.rInCasos.cant_casos_recuperados + regm.rInfoMuni.rInCasos.cant_casos_recuperados;
-				regm.rInfoMuni.rInCasos.cant_casos_fallecidos:=min.rInCasos.cant_casos_fallecidos + regm.rInfoMuni.rInCasos.cant_casos_fallecidos;
+				rCasos.cant_casos_activos:=min.rInCasos.cant_casos_activos;
+				rCasos.cant_casos_nuevos:=min.rInCasos.cant_casos_nuevos ;
+				rCasos.cant_casos_recuperados:=min.rInCasos.cant_casos_recuperados + rCasos.cant_casos_recuperados;
+				rCasos.cant_casos_fallecidos:=min.rInCasos.cant_casos_fallecidos + rCasos.cant_casos_fallecidos;
 				
-				cant_casos_activos:=regm.rInfoMuni.rInCasos.cant_casos_activos+rCasos.cant_casos_activos;
+				cant_casos_activos:=regm.rInfoMuni.rInCasos.cant_casos_activos+cant_casos_activos;
 				
 				minimo(aInfoDet,min,aDet);
 			end;
+			regm.rInfoMuni.rInCasos.cant_casos_activos:=rCasos.cant_casos_activos ;
+			regm.rInfoMuni.rInCasos.cant_casos_nuevos:=rCasos.cant_casos_nuevos ;
+			regm.rInfoMuni.rInCasos.cant_casos_recuperados:=rCasos.cant_casos_recuperados + regm.rInfoMuni.rInCasos.cant_casos_recuperados;
+			regm.rInfoMuni.rInCasos.cant_casos_fallecidos:=rCasos.cant_casos_fallecidos + regm.rInfoMuni.rInCasos.cant_casos_fallecidos;
 			seek(mae,filepos(mae)-1);
 			write(mae,regm);
 		end;
