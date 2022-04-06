@@ -20,7 +20,7 @@ Realice las declaraciones necesarias, el programa principal y los procedimientos
 requiera para la actualización solicitada e informe cantidad de localidades con más de 50
 casos activos (las localidades pueden o no haber sido actualizadas).
 
-TA MAL.
+TA mejor
 
 
 }
