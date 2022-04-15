@@ -78,27 +78,14 @@ procedure informarArchivo (var mae: fileAccesos; anoBuscar: integer);
 var
 	mes_act,dia_act,id_act,tiemp_acceso_dia,tiemp_acceso_mes,tiemp_acceso_ano:integer;
 	regm: rAcceso;
-	seguir_iterando: boolean;
 begin
-	seguir_iterando:= true;//para que, una vez que encontre el año, no itere mas despues de procesarlo.
-	reset(mae);
-{
-	while not (eof) and (not encontre) do begin
-		read(mae, regm_aux);
-		if regm_aux.ano = anoBuscar then
-			encontre:= true;
-	end;
 	
-	seek(mae,filePos(mae)-1);
-}
+	reset(mae);
 	leer(mae,regm);
 
-	while (regm.ano <> VALOR_ALTO) and (seguir_iterando) do begin 
-		while (regm.ano <> anoBuscar) do begin
+	while (regm.ano <> VALOR_ALTO) and (regm.ano <> anoBuscar) do 
 			leer(mae,regm);
-		end;
-		if (regm.ano = anoBuscar) then begin
-			seguir_iterando:= false;
+		while (regm.ano <> VALOR_ALTO) do begin
 			tiemp_acceso_ano:=0;
 			while (regm.ano = anoBuscar) do begin
 				writeln(anoBuscar);
@@ -128,12 +115,12 @@ begin
 				writeln(tiemp_acceso_mes);
 			end;//regm.ano = anoBuscar
 			writeln(tiemp_acceso_ano);
-		end
-		else
+		end;//regm.ano <> VALOR_ALTO
+		if (regm.ano = VALOR_ALTO)then
 			writeln('anio no encontrado');
-	end;//regm.ano <> VALOR_ALTO
-	close(mae);
+		close(mae);
 end;
+
 var
 	accesos : fileAccesos;
 	ano : integer;
@@ -141,10 +128,11 @@ BEGIN
 	assign(accesos, 'archivo_accesos');
 	write('Ingrese el ano ');
 	read(ano);
-	informarArchivo(accesos, ano)
+	informarArchivo(accesos, ano);
 	
 	
 	
 END.
+
 
 	
