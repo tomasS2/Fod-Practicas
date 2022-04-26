@@ -57,29 +57,34 @@ end;
 	
 	
 	
+	//HACER ESTO MISMO EN EL 6
 procedure compactar (var f: f_ave);
-
-//MAL
-//CORREGIR LO QUE PASA SI EL ULTIMO REGISTRO ESTA MARCADO Y HAY OTRO EN EL MEDIO. EN EL 6 TAMBIEN CORREGIR.
-
 var
-	reg_ave,aux: ave;
-	pos_borrar,i: integer;
+	reg_ave: ave;
+	pos_borrar: integer;
 begin
 	reset (f);
-	i:=1;
 	while not eof (f) do begin
 		read(f,reg_ave);
-		while reg_ave.cod < 0 and not eof (f) do begin 
-		//CORREGIR CASO QUE LEA EL PRIMER REGISTRO 
-			seek(f, filesize(f)-i);
-			read(f,aux);
-			i := i + 1;
+		if (reg_ave.cod < 0) then begin 
+			pos_borrar:= filePos(f)-1;
+			seek (f, filesize(f)-1);
+			read(f,reg_ave);
+			while (reg_ave.cod < 0) do begin //mientras lo que este en la ultima pos este marcado, borro.
+				seek (f, filesize(f)-1);
+				truncate(f);
+				seek (f, filesize(f)-1);//es uno menos que antes porque trunqué.
+				read(f,reg_ave);
+			end;//cuando el ultimo deja de ser un registro marcado, sale.
+			{se copia lo que esta en la ultima pos del archivo (un registro con un valor NO marcado) en la pos donde está guardado el indice de un registro a borrar. Una vez copiado, se trunca la ultima pos para eliminar el duplicado.}
+			seek(f, pos_borrar);
+			write(f,reg_ave);
+			seek (f, filesize(f)-1);
+			truncate(f);
+			seek(f, pos_borrar);
 		end;
-		seek(f,filesize(f)-1);
-		truncate(f);
+		read(f, reg_ave);
 	end;
-	close(f);
 end;
 	
 
