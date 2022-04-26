@@ -93,23 +93,23 @@ end;
 procedure mantenimiento(var arch: archivo);
 	procedure darAltaNovela(var arch: archivo);
 	var
-		nov,aux,aux2: novela;
+		nov, cabecera: novela;
 	begin
 		reset(arch);
 		leerReg(nov);
 		if not eof (arch) then
-			read(arch, aux);//leo el primer reg para saber si hay algun espacio libre
-		if (aux.cod = 0) then begin
+			read(arch, cabecera);//leo el primer reg para saber si hay algun espacio libre
+		if (cabecera.cod = 0) then begin
 			seek(arch, filesize(arch));
 			write(arch,nov);
 		end
 		else begin
-			seek (arch, (aux.cod * -1));//me muevo a la pos libre
-			read(arch,aux2);
-			seek (arch, 0);
-			write(arch, aux2);
-			seek (arch, (aux.cod * -1));
+			seek (arch, (cabecera.cod * -1));//me muevo a la pos libre
+			read(arch,cabecera);
+			seek (arch, filepos(arch)-1);
 			write(arch,nov);
+			seek (arch, 0);
+			write(arch, cabecera);
 		end;
 		close(arch);
 	end;
