@@ -40,22 +40,23 @@ type
 
 procedure agregarFlor (var a: tArchFlores ; nombre: string; codigo:integer);
 var
-	flor,aux,aux2: reg_flor;
+	flor,cabecera: reg_flor;
 begin
 	reset (a);
-	if not eof (a)then
-		read(a,aux);
-	if aux.codigo = 0 then 
-		writeln('no hay registros borrados')
-	else begin
-		seek(a, (aux.codigo*-1));
-		read(a, aux2);
-		seek(a, 0);
-		write(a, aux2);
-		seek(a, (aux.codigo*-1));
-		flor.nombre := nombre;
-		flor.codigo := codigo;
+	flor.nombre := nombre;
+	flor.codigo := codigo;
+	read(a,cabecera);
+	if cabecera.codigo = 0 then begin
+		seek(a, filesize(a));
 		write(a,flor);
+	end
+	else begin
+		seek(a, (cabecera.codigo*-1));
+		read(a, cabecera);
+		seek(a, filepos(a)-1);
+		write(a, flor);
+		seek(a, 0 );
+		write(a, cabecera);
 	end;
 	close(a);
 end;
@@ -119,17 +120,6 @@ begin
 	read(flor.nombre);
 	eliminarFlor(arch,flor);
 end.
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
